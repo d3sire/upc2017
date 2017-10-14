@@ -10,8 +10,6 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -169,4 +167,4 @@ def parse_dates(query):
     
     return parsed_dates
 
-app.run()
+app.run(debug = True)
