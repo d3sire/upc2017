@@ -47,7 +47,7 @@ def incoming():
 	command_argument = data['command_argument']
 	workspace_id = int(data['workspace_id'])
 
-	answer = """/oscar + {}
+	answer = """/oscar {}
 
 	<b>""".format(command_argument)
 
@@ -59,6 +59,7 @@ def incoming():
 		answer += query(command_argument, data['user_name'], workspace_id)
 
 	answer += '</b>'
+	print(jsonify({'content': answer}))
 	return jsonify({'content': answer})
 
 
