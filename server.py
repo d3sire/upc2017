@@ -10,6 +10,9 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
 
 companies_dbs = {}
