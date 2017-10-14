@@ -5,6 +5,8 @@ import requests
 import json
 import pandas as pd
 from dateparser import parse
+import matplotlib.pyplot as plt
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -23,26 +25,42 @@ def incoming():
 	"""
 	data = request.get_json(silent = True)
 	print(request.__dict__)
+
 	if not data:
 		return jsonify('fucking shit')
+
 	event_type = data['event_type']
 	if event_type == 'ping':
 		return jsonify({'content': 'pong'})
+
 	command = data['command']
 	command_argument = data['command_argument']
-	return jsonify([command, command_argument])
+
+	if command_argument.split()[0] == 'setup':
+		return setup(command_argument.split()[1:])
+
+	if command_argument.split()[1] == 'plot':
+		return query_plot(' '.join(command_argument.split()[1:]))
+
+	return query(command_argument)
 
 
-
-@app.route('/setup')
-def setup():
+@app.route('/twist_configure', methods = ['GET'])
+def configure():
 	"""
-	Creates company_id and stores db credentials for this company
+	Called when integration has been installed
 	"""
+	return jsonify('configured')
+
+
+def setup(args):
+	"""
+	Initiates connection to client's database
+	"""
+	dbtype = args[0]
+	server = args[1]
+	key = args[2]
 	company_id = 1488
-	server = request.args.get('server', '')
-	key = request.args.get('key', '')
-	dbtype = request.args.get('dbtype', '')
 
 	companies_dbs[company_id] = {
 		'server': server,
@@ -50,21 +68,40 @@ def setup():
 		'dbtype': dbtype
 	}
 
-	return jsonify(company_id)
+ 	return jsonify({'content': f'Connection to {dbtype} was successfully installed'})
 
 
-@app.route('/query')
-def query():
+def query(text):
 	"""
-	Queries db
+	Queries client's database
 	"""
-	company_id = 1488
-	text = request.args.get('text', '')
-	q_type = request.args.get('type', '')
-
-	answer = ''
-	if q_type == 'users':
+	if 'user' in text:
 		answer = 'There are ' + str(companies_data[company_id]['users']) + ' users'
+
+	return jsonify({'content': answer})
+
+
+def query_plot(text):
+	"""
+	Returns a plot from query
+	"""
+	data = json.loads(query(text))['content']
+	plt.plot(data)
+	filename = 'plot_' + str(datetime.now())
+	plt.savefig('plots/' + filename)
+
+	answer = {
+		'content': 'Here is your plot',
+		'attachments': [
+			{
+				'file_type': 'image/png',
+				'file_name': filename,
+				'url': '',
+				'attachment_id': '',
+				'upload_state': ''
+			}
+		]
+	}
 
 	return jsonify(answer)
 
