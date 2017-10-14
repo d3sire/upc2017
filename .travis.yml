@@ -1,0 +1,12 @@
+language: python
+sudo: required
+python:
+  - "3.4"
+addons:
+  apt:
+    ssh_known_hosts:
+      - github.com
+install:
+  - pip install -r requirements.txt
+script: 
+  - pytest
