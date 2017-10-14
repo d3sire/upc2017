@@ -3,3 +3,4 @@ requests
 pandas
 dateparser
 matplotlib
+tkinter
