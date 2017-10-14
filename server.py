@@ -129,7 +129,7 @@ def query_plot(text, user_name, workspace_id):
 		filename = 'plot_' + str(datetime.now()) + '.png'
 		plt.savefig('/home/www/plots/' + filename)
 
-		answer = {'content': 'Here is your plot:**\n\n' + quote('https://plentsov.com/static/' + filename)}
+		answer = {'content': 'Here is your plot:**\n\nhttps://plentsov.com/static/' + quote(filename)}
 	else:
 		answer = {'content': 'No entiendo, ' + str(user_name)}
 
