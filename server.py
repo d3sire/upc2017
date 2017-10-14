@@ -12,6 +12,8 @@ from datetime import datetime
 import numpy as np
 import os
 
+from resizeimage import resizeimage
+
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -125,10 +127,21 @@ def query_plot(text, user_name, workspace_id):
 		filename = 'plot.png'
 		plt.savefig('/home/www/plots/' + filename)
 
+		for size in [192, 512, 1024]:
+			with open(filename 'r+b') as f:
+				with Image.open(f) as image:
+					cover = resizeimage.resize_cover(image, [200, 100])
+					cover.save('/home/www/plots/' + str(size) + '_' +filename, image.format)
+
 		answer = {
 			'content': 'Here is your plot',
 			'attachments': [
 				{
+					'thumbnails': {
+						"1024x1024": get_thumbnail(''/home/www/plots/' + filename', '300x300', crop='center')
+						"512x512":
+						"192x192":
+					}
 					'file_type': 'image/png',
 					'file_name': filename,
 					'file_size': os.path.getsize('/home/www/plots/' + filename),
