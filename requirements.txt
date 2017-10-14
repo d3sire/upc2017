@@ -4,5 +4,3 @@ pandas
 dateparser
 matplotlib
 numpy
-pillow
-python-resize-image

@@ -12,6 +12,8 @@ from datetime import datetime
 import numpy as np
 import os
 
+from urllib.parse import urlencode
+
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -127,7 +129,7 @@ def query_plot(text, user_name, workspace_id):
 		filename = 'plot_' + str(datetime.now()) + '.png'
 		plt.savefig('/home/www/plots/' + filename)
 
-		answer = {'content': 'Here is your plot:**\n\n' + 'https://plentsov.com/static/' + filename}
+		answer = {'content': 'Here is your plot:**\n\n' + urlencode('https://plentsov.com/static/' + filename)}
 	else:
 		answer = {'content': 'No entiendo, ' + str(user_name)}
 
