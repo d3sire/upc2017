@@ -45,7 +45,7 @@ def incoming():
 	if len(command_argument.split()) > 1 and command_argument.split()[1] == 'plot':
 		return query_plot(' '.join(command_argument.split()[1:]))
 
-	return query(command_argument)
+	return query(command_argument, data['user_name'], data['verify_token'])
 
 
 @app.route('/twist_configure', methods = ['GET'])
@@ -74,14 +74,14 @@ def setup(args):
 	return jsonify({'content': 'Connection to {} was successfully installed'}.format(dbtype))
 
 
-def query(text):
+def query(text, user_name, verify_token):
 	"""
 	Queries client's database
 	"""
 	if 'user' in text:
 		answer = 'There are ' + str(companies_data[company_id]['users']) + ' users'
 	else:
-		answer = 'No entiendo'
+		answer = 'Oscar: No entiendo. Your token is ' + verify_token + ', ' + user_name
 
 	return jsonify({'content': answer})
 
