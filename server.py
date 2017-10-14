@@ -35,7 +35,7 @@ def incoming():
 
 	# incorrect data
 	if not data:
-		return jsonify('fucking shit')
+		return jsonify('Something gone wrong')
 
 	# if pinging
 	event_type = data['event_type']
@@ -47,13 +47,18 @@ def incoming():
 	command_argument = data['command_argument']
 	workspace_id = int(data['workspace_id'])
 
+	answer = """/oscar ' + command_argument
+
+	"""
+
 	if command_argument.split()[0] == 'setup':
-		return setup(workspace_id, command_argument.split()[1:])
+		answer += setup(workspace_id, command_argument.split()[1:])
+	elif len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
+		answer += query_plot(' '.join(command_argument.split()[1:]))
+	else:
+		answer += query(command_argument, data['user_name'], workspace_id)
 
-	if len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
-		return query_plot(' '.join(command_argument.split()[1:]))
-
-	return query(command_argument, data['user_name'], workspace_id)
+	return jsonify({'content': answer})
 
 
 @app.route('/twist_configure', methods = ['GET'])
@@ -68,34 +73,35 @@ def setup(workspace_id, args):
 	"""
 	Initiates connection to client's database
 	"""
-	dbtype = args[0]
-	server = args[1] 
-	key = args[2]
 
-	companies_dbs[workspace_id] = {
-		'server': server,
-		'key': key,
-		'dbtype': dbtype
-	}
+	if len(args) != 3:
+		answer = 'Please use setup this way: "\oscar setup dbtype host ssh_key"'
+	else:
+		dbtype = args[0]
+		server = args[1] 
+		key = args[2]
 
-	return jsonify({'content': 'Connection to {} was successfully installed'}.format(dbtype))
+		companies_dbs[workspace_id] = {
+			'server': server,
+			'key': key,
+			'dbtype': dbtype
+		}
+
+		answer = 'Connection to {} was successfully installed'.format(dbtype)
+
+	return answer
 
 
 def query(text, user_name, workspace_id):
 	"""
 	Queries client's database
 	"""
-	answer = """
-	/oscar {}
-
-	Oscar: 
-	""".format(text)
 	if 'user' in text:
-		answer += ('There are ' + str(companies_data[workspace_id]['users']) + ' users.')
+		answer = 'There are ' + str(companies_data[workspace_id]['users']) + ' users.'
 	else:
-		answer += ('No entiendo, ' + str(user_name))
+		answer = 'No entiendo, ' + str(user_name)
 
-	return jsonify({'content': answer})
+	return answer
 
 
 def query_plot(text):
