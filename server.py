@@ -5,6 +5,8 @@ import requests
 import json
 import pandas as pd
 from dateparser import parse
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 
