@@ -120,13 +120,12 @@ def query_plot(text, user_name, workspace_id):
 	if 'user' in text:
 		data = companies_data[workspace_id]['users']
 		plt.plot(data)
-		filename = 'plot_' + str(datetime.now()) + '.png'
+		#filename = 'plot_' + str(datetime.now()) + '.png'
+		filename = 'plot.png'
 		plt.savefig('/home/www/plots/' + filename)
 
 		answer = {
-			'content': """/oscar {}
-
-**Here is your plot**""".format(text),
+			'content': 'Here is your plot',
 			'attachments': [
 				{
 					'file_type': 'image/png',
