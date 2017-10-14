@@ -10,6 +10,8 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -60,8 +62,7 @@ def incoming():
 		answer += query(command_argument, data['user_name'], workspace_id)
 
 	answer += '</b>'
-	print(jsonify({'content': answer}))
-	print('ololo')
+	logging.warning(jsonify({'content': answer}))
 	return jsonify({'content': answer})
 
 
@@ -167,4 +168,4 @@ def parse_dates(query):
     
     return parsed_dates
 
-app.run(debug = True)
+app.run()
