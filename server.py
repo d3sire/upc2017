@@ -60,6 +60,7 @@ def incoming():
 
 	answer += '</b>'
 	print(jsonify({'content': answer}))
+	print('ololo')
 	return jsonify({'content': answer})
 
 
