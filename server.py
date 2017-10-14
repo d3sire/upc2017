@@ -14,9 +14,14 @@ app = Flask(__name__)
 
 companies_dbs = {}
 
+
+# temporary client databases :)
 companies_data = {
-	1488: {
+	28554: {
 		'users': 1888
+	},
+	28565: {
+		'users': 2135
 	}
 }
 
@@ -28,20 +33,23 @@ def incoming():
 	data = request.form
 	#print(request.form)
 
+	# incorrect data
 	if not data:
 		return jsonify('fucking shit')
 
+	# if pinging
 	event_type = data['event_type']
 	if event_type == 'ping':
 		return jsonify({'content': 'pong'})
 
-	command = data['command']
+
+	command = data['command'] # should be oscar
 	command_argument = data['command_argument']
 
 	if command_argument.split()[0] == 'setup':
 		return setup(command_argument.split()[1:])
 
-	if len(command_argument.split()) > 1 and command_argument.split()[1] == 'plot':
+	if len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
 		return query_plot(' '.join(command_argument.split()[1:]))
 
 	return query(command_argument, data['user_name'], data['workspace_id'])
@@ -55,16 +63,16 @@ def configure():
 	return jsonify('configured')
 
 
-def setup(args):
+def setup(workspace_id, args):
 	"""
 	Initiates connection to client's database
 	"""
 	dbtype = args[0]
-	server = args[1]
+	server = args[1] 
 	key = args[2]
-	company_id = 1488
+	workspace_id = 1488
 
-	companies_dbs[company_id] = {
+	companies_dbs[workspace_id] = {
 		'server': server,
 		'key': key,
 		'dbtype': dbtype
@@ -77,10 +85,15 @@ def query(text, user_name, workspace_id):
 	"""
 	Queries client's database
 	"""
+	answer = """
+	/oscar {}
+
+	Oscar: 
+	""".format(text)
 	if 'user' in text:
-		answer = 'There are ' + str(companies_data[company_id]['users']) + ' users'
+		answer += ('There are ' + str(companies_data[workspace_id]['users']) + ' users.')
 	else:
-		answer = 'Oscar: No entiendo. Your workspace is ' + workspace_id + ', ' + user_name
+		answer += ('No entiendo, ' + str(user_name))
 
 	return jsonify({'content': answer})
 
