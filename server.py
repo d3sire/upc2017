@@ -131,7 +131,7 @@ def query_plot(text, user_name, workspace_id):
 				{
 					'file_type': 'image/png',
 					'file_name': filename,
-					'file_size': os.path.getsize('/home/www/plots/' + filename)
+					'file_size': os.path.getsize('/home/www/plots/' + filename),
 					'url': 'https://plentsov.com/static/' + filename,
 					'image': 'https://plentsov.com/static/' + filename,
 					'image_height': 480,
