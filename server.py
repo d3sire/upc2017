@@ -68,7 +68,7 @@ def setup(args):
 		'dbtype': dbtype
 	}
 
-	return jsonify({'content': f'Connection to {dbtype} was successfully installed'})
+	return jsonify({'content': 'Connection to {} was successfully installed'}.format(dbtype))
 
 
 def query(text):
