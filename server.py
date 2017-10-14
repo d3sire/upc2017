@@ -62,7 +62,7 @@ def incoming():
 	else:
 		answer = query(command_argument, data['user_name'], workspace_id)
 
-	answer['content'] = answer_start + answer_mid['content'] + '**'
+	answer['content'] = answer_start + answer['content'] + '**'
 
 	logging.warning(jsonify(answer).get_data(as_text=True))
 
