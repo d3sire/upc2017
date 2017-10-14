@@ -10,6 +10,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 import numpy as np
+import os
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -130,6 +131,7 @@ def query_plot(text, user_name, workspace_id):
 				{
 					'file_type': 'image/png',
 					'file_name': filename,
+					'file_size': os.path.getsize('/home/www/plots/' + filename)
 					'url': 'https://plentsov.com/static/' + filename,
 					'image': 'https://plentsov.com/static/' + filename,
 					'image_height': 480,
