@@ -66,7 +66,7 @@ def incoming():
 
 	logging.warning(jsonify(answer).get_data(as_text=True))
 
-	return jsonify({'content': answer})
+	return jsonify(answer)
 
 
 @app.route('/twist_configure', methods = ['GET'])
