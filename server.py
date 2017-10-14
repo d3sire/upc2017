@@ -12,9 +12,6 @@ from datetime import datetime
 import numpy as np
 import os
 
-from resizeimage import resizeimage
-from PIL import Image
-
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -59,14 +56,17 @@ def incoming():
 
 **""".format(command_argument)
 
+	is_plot = 0
+
 	if command_argument.split()[0] == 'setup':
 		answer = setup(workspace_id, command_argument.split()[1:])
 	elif len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
 		answer = query_plot(' '.join(command_argument.split()[1:]), data['user_name'], workspace_id)
+		is_plot = 1
 	else:
 		answer = query(command_argument, data['user_name'], workspace_id)
 
-	answer['content'] = answer_start + answer['content'] + '**'
+	answer['content'] = answer_start + answer['content'] + ('**' if is_plot == 0 else '')
 
 	logging.warning(jsonify(answer).get_data(as_text=True))
 
@@ -124,44 +124,12 @@ def query_plot(text, user_name, workspace_id):
 	if 'user' in text:
 		data = companies_data[workspace_id]['users']
 		plt.plot(data)
-		#filename = 'plot_' + str(datetime.now()) + '.png'
-		filename = 'plot.png'
+		filename = 'plot_' + str(datetime.now()) + '.png'
 		plt.savefig('/home/www/plots/' + filename)
 
-		# for size in [192]:
-		# 	with open('/home/www/plots/' + filename, 'r+b') as f:
-		# 		with Image.open(f) as image:
-		# 			cover = resizeimage.resize_cover(image, [size, size])
-		# 			cover.save('/home/www/plots/' + str(size) + '_' +filename, image.format)
-
-		# answer = {
-		# 	'content': 'Here is your plot',
-		# 	'attachments': [
-		# 		{
-		# 			'thumbnails': {
-		# 				#"1024x1024": 'https://plentsov.com/static/1024_' + filename,
-		# 				#"512x512": 'https://plentsov.com/static/512_' + filename,
-		# 				"192x192": 'https://plentsov.com/static/192_' + filename
-		# 			},
-		# 			'file_type': 'image/png',
-		# 			'file_name': filename,
-		# 			'file_size': os.path.getsize('/home/www/plots/' + filename),
-		# 			'url': 'https://plentsov.com/static/' + filename,
-		# 			'image': 'https://plentsov.com/static/' + filename,
-		# 			'image_height': 480,
-		# 			'image_width': 640,
-		# 			'attachment_id': np.random.randint(10000),
-		# 			'upload_state': 'uploaded'
-		# 		}
-		# 	]
-		# }
-
-		answer = {'content': 'Here is your plot:\n\n' + 'https://plentsov.com/static/' + filename}
+		answer = {'content': 'Here is your plot:**\n\n' + 'https://plentsov.com/static/' + filename}
 	else:
 		answer = {'content': 'No entiendo, ' + str(user_name)}
-
-
-	
 
 	return answer
 
