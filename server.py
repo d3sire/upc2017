@@ -73,7 +73,7 @@ def setup(args):
 	return jsonify({'content': 'Connection to {} was successfully installed'}.format(dbtype))
 
 
-def query(text, user_name, verify_token):
+def query(text, user_name, workspace_id):
 	"""
 	Queries client's database
 	"""
