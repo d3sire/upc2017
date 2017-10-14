@@ -80,6 +80,8 @@ def query(text):
 	"""
 	if 'user' in text:
 		answer = 'There are ' + str(companies_data[company_id]['users']) + ' users'
+	else:
+		answer = 'No entiendo'
 
 	return jsonify({'content': answer})
 
