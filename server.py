@@ -25,9 +25,9 @@ def incoming():
 	"""
 	Hook for the twist
 	"""
-	data = request.get_json(silent = True)
+	data = request.form
 	print(request.__dict__)
-	print(request.get_json())
+	print(request.form)
 
 	if not data:
 		return jsonify('fucking shit')
