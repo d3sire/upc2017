@@ -62,7 +62,7 @@ def incoming():
 		answer += query(command_argument, data['user_name'], workspace_id)
 
 	answer += '</b>'
-	logging.warning(jsonify({'content': answer}))
+	logging.warning(json.loads(jsonify({'content': answer})))
 	return jsonify({'content': answer})
 
 
