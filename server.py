@@ -121,7 +121,7 @@ def query_plot(text, user_name, workspace_id):
 		data = companies_data[workspace_id]['users']
 		plt.plot(data)
 		filename = 'plot_' + str(datetime.now()) + '.png'
-		plt.savefig('plots/' + filename)
+		plt.savefig('home/www/plots/' + filename)
 
 		answer = {
 			'content': """/oscar {}
