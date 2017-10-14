@@ -45,14 +45,15 @@ def incoming():
 
 	command = data['command'] # should be oscar
 	command_argument = data['command_argument']
+	workspace_id = int(data['workspace_id'])
 
 	if command_argument.split()[0] == 'setup':
-		return setup(command_argument.split()[1:])
+		return setup(workspace_id, command_argument.split()[1:])
 
 	if len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
 		return query_plot(' '.join(command_argument.split()[1:]))
 
-	return query(command_argument, data['user_name'], data['workspace_id'])
+	return query(command_argument, data['user_name'], workspace_id)
 
 
 @app.route('/twist_configure', methods = ['GET'])
@@ -70,7 +71,6 @@ def setup(workspace_id, args):
 	dbtype = args[0]
 	server = args[1] 
 	key = args[2]
-	workspace_id = 1488
 
 	companies_dbs[workspace_id] = {
 		'server': server,
