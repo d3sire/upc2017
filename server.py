@@ -9,6 +9,7 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
+import numpy as np
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -50,20 +51,21 @@ def incoming():
 	command_argument = data['command_argument']
 	workspace_id = int(data['workspace_id'])
 
-	answer = """/oscar {}
+	answer_start = """/oscar {}
 
 **""".format(command_argument)
 
 	if command_argument.split()[0] == 'setup':
-		answer += setup(workspace_id, command_argument.split()[1:])
+		answer = setup(workspace_id, command_argument.split()[1:])
 	elif len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
-		answer += query_plot(' '.join(command_argument.split()[1:]))
+		answer = query_plot(' '.join(command_argument.split()[1:]), data['user_name'], workspace_id)
 	else:
-		answer += query(command_argument, data['user_name'], workspace_id)
+		answer = query(command_argument, data['user_name'], workspace_id)
 
-	logging.warning(jsonify({'content': answer}).get_data(as_text=True))
+	answer['content'] = answer_start + answer_mid['content'] + '**'
 
-	answer += '**'
+	logging.warning(jsonify(answer).get_data(as_text=True))
+
 	return jsonify({'content': answer})
 
 
@@ -95,7 +97,7 @@ def setup(workspace_id, args):
 
 		answer = 'Connection to {} was successfully installed'.format(dbtype)
 
-	return answer
+	return {'content': answer}
 
 
 def query(text, user_name, workspace_id):
@@ -107,30 +109,40 @@ def query(text, user_name, workspace_id):
 	else:
 		answer = 'No entiendo, ' + str(user_name)
 
-	return answer
+	return {'content': answer}
 
 
-def query_plot(text):
+def query_plot(text, user_name, workspace_id):
 	"""
 	Returns a plot from query
 	"""
-	data = json.loads(query(text))['content']
-	plt.plot(data)
-	filename = 'plot_' + str(datetime.now())
-	plt.savefig('plots/' + filename)
+	
+	if 'user' in text:
+		data = companies_data[workspace_id]['users']
+		plt.plot(data)
+		filename = 'plot_' + str(datetime.now())
+		plt.savefig('plots/' + filename)
 
-	answer = {
-		'content': 'Here is your plot',
-		'attachments': [
-			{
-				'file_type': 'image/png',
-				'file_name': filename,
-				'url': '',
-				'attachment_id': '',
-				'upload_state': ''
-			}
-		]
-	}
+		answer = {
+			'content': """/oscar {}
+
+**Here is your plot**""".format(command_argument),
+			'attachments': [
+				{
+					'file_type': 'image/png',
+					'file_name': filename,
+					'url': 'https://plentsov.com/static/' + filename,
+					'image': 'https://plentsov.com/static/' + filename,
+					'attachment_id': np.random.randint(10000),
+					'upload_state': 'uploaded'
+				}
+			]
+		}
+	else:
+		answer = {'content': 'No entiendo, ' + str(user_name)}
+
+
+	
 
 	return jsonify(answer)
 
