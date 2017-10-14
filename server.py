@@ -137,11 +137,11 @@ def query_plot(text, user_name, workspace_id):
 			'content': 'Here is your plot',
 			'attachments': [
 				{
-					'thumbnails': {
-						"1024x1024": get_thumbnail(''/home/www/plots/' + filename', '300x300', crop='center')
-						"512x512":
-						"192x192":
-					}
+					# 'thumbnails': {
+					# 	"1024x1024": get_thumbnail(''/home/www/plots/' + filename', '300x300', crop='center')
+					# 	"512x512":
+					# 	"192x192":
+					# }
 					'file_type': 'image/png',
 					'file_name': filename,
 					'file_size': os.path.getsize('/home/www/plots/' + filename),
