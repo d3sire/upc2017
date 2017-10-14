@@ -10,6 +10,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from datetime import datetime
 import numpy as np
+import os
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -29,7 +30,7 @@ companies_data = {
 	}
 }
 
-@app.route('/twist_incoming', methods = ['POST'])
+@app.route('/api/twist_incoming', methods = ['POST'])
 def incoming():
 	"""
 	Hook for the twist
@@ -69,7 +70,7 @@ def incoming():
 	return jsonify(answer)
 
 
-@app.route('/twist_configure', methods = ['GET'])
+@app.route('/api/twist_configure', methods = ['GET'])
 def configure():
 	"""
 	Called when integration has been installed
@@ -120,19 +121,21 @@ def query_plot(text, user_name, workspace_id):
 	if 'user' in text:
 		data = companies_data[workspace_id]['users']
 		plt.plot(data)
-		filename = 'plot_' + str(datetime.now()) + '.png'
-		plt.savefig('plots/' + filename)
+		#filename = 'plot_' + str(datetime.now()) + '.png'
+		filename = 'plot.png'
+		plt.savefig('/home/www/plots/' + filename)
 
 		answer = {
-			'content': """/oscar {}
-
-**Here is your plot**""".format(command_argument),
+			'content': 'Here is your plot',
 			'attachments': [
 				{
 					'file_type': 'image/png',
 					'file_name': filename,
+					'file_size': os.path.getsize('/home/www/plots/' + filename),
 					'url': 'https://plentsov.com/static/' + filename,
 					'image': 'https://plentsov.com/static/' + filename,
+					'image_height': 480,
+					'image_width': 640,
 					'attachment_id': np.random.randint(10000),
 					'upload_state': 'uploaded'
 				}
@@ -144,7 +147,7 @@ def query_plot(text, user_name, workspace_id):
 
 	
 
-	return jsonify(answer)
+	return answer
 
 
 def parse_dates(query):
