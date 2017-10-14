@@ -52,7 +52,7 @@ def incoming():
 
 	answer = """/oscar {}
 
-""".format(command_argument)
+**""".format(command_argument)
 
 	if command_argument.split()[0] == 'setup':
 		answer += setup(workspace_id, command_argument.split()[1:])
@@ -62,6 +62,8 @@ def incoming():
 		answer += query(command_argument, data['user_name'], workspace_id)
 
 	logging.warning(jsonify({'content': answer}).get_data(as_text=True))
+
+	answer += '**'
 	return jsonify({'content': answer})
 
 
