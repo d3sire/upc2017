@@ -29,7 +29,7 @@ companies_data = {
 	}
 }
 
-@app.route('/twist_incoming', methods = ['POST'])
+@app.route('/api/twist_incoming', methods = ['POST'])
 def incoming():
 	"""
 	Hook for the twist
@@ -69,7 +69,7 @@ def incoming():
 	return jsonify(answer)
 
 
-@app.route('/twist_configure', methods = ['GET'])
+@app.route('/api/twist_configure', methods = ['GET'])
 def configure():
 	"""
 	Called when integration has been installed
