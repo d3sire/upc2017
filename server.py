@@ -126,7 +126,7 @@ def query_plot(text, user_name, workspace_id):
 		answer = {
 			'content': """/oscar {}
 
-**Here is your plot**""".format(command_argument),
+**Here is your plot**""".format(text),
 			'attachments': [
 				{
 					'file_type': 'image/png',
