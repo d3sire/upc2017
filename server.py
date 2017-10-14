@@ -128,33 +128,35 @@ def query_plot(text, user_name, workspace_id):
 		filename = 'plot.png'
 		plt.savefig('/home/www/plots/' + filename)
 
-		for size in [192]:
-			with open('/home/www/plots/' + filename, 'r+b') as f:
-				with Image.open(f) as image:
-					cover = resizeimage.resize_cover(image, [size, size])
-					cover.save('/home/www/plots/' + str(size) + '_' +filename, image.format)
+		# for size in [192]:
+		# 	with open('/home/www/plots/' + filename, 'r+b') as f:
+		# 		with Image.open(f) as image:
+		# 			cover = resizeimage.resize_cover(image, [size, size])
+		# 			cover.save('/home/www/plots/' + str(size) + '_' +filename, image.format)
 
-		answer = {
-			'content': 'Here is your plot',
-			'attachments': [
-				{
-					'thumbnails': {
-						#"1024x1024": 'https://plentsov.com/static/1024_' + filename,
-						#"512x512": 'https://plentsov.com/static/512_' + filename,
-						"192x192": 'https://plentsov.com/static/192_' + filename
-					},
-					'file_type': 'image/png',
-					'file_name': filename,
-					'file_size': os.path.getsize('/home/www/plots/' + filename),
-					'url': 'https://plentsov.com/static/' + filename,
-					'image': 'https://plentsov.com/static/' + filename,
-					'image_height': 480,
-					'image_width': 640,
-					'attachment_id': np.random.randint(10000),
-					'upload_state': 'uploaded'
-				}
-			]
-		}
+		# answer = {
+		# 	'content': 'Here is your plot',
+		# 	'attachments': [
+		# 		{
+		# 			'thumbnails': {
+		# 				#"1024x1024": 'https://plentsov.com/static/1024_' + filename,
+		# 				#"512x512": 'https://plentsov.com/static/512_' + filename,
+		# 				"192x192": 'https://plentsov.com/static/192_' + filename
+		# 			},
+		# 			'file_type': 'image/png',
+		# 			'file_name': filename,
+		# 			'file_size': os.path.getsize('/home/www/plots/' + filename),
+		# 			'url': 'https://plentsov.com/static/' + filename,
+		# 			'image': 'https://plentsov.com/static/' + filename,
+		# 			'image_height': 480,
+		# 			'image_width': 640,
+		# 			'attachment_id': np.random.randint(10000),
+		# 			'upload_state': 'uploaded'
+		# 		}
+		# 	]
+		# }
+
+		answer = {'content': 'Here is your plot:\n\n' + 'https://plentsov.com/static/' + filename}
 	else:
 		answer = {'content': 'No entiendo, ' + str(user_name)}
 
