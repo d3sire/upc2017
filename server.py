@@ -144,7 +144,7 @@ def query_plot(text, user_name, workspace_id):
 
 	
 
-	return jsonify(answer)
+	return answer
 
 
 def parse_dates(query):
