@@ -61,6 +61,7 @@ def incoming():
 	else:
 		answer += query(command_argument, data['user_name'], workspace_id)
 
+	logging.warning(jsonify({'content': answer}).get_data(as_text=True))
 	return jsonify({'content': answer})
 
 
