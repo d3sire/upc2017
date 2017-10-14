@@ -18,11 +18,15 @@ companies_data = {
 
 @app.route('/twist_incoming', methods = ['POST'])
 def incoming():
-	event_type = request.form['event_type']
+	"""
+	Hook for the twist
+	"""
+	data = request.get_json(silent = True)
+	event_type = data['event_type']
 	if event_type == 'ping':
-		return jsonify(request.form['content'])
-	command = request.form['command']
-	command_argument = request.form['command_argument']
+		return jsonify({'content': 'pong'})
+	command = data['command']
+	command_argument = data['command_argument']
 	return jsonify([command, command_argument])
 
 
