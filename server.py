@@ -128,7 +128,7 @@ def query_plot(text, user_name, workspace_id):
 		plt.savefig('/home/www/plots/' + filename)
 
 		for size in [192, 512, 1024]:
-			with open(filename 'r+b') as f:
+			with open(filename, 'r+b') as f:
 				with Image.open(f) as image:
 					cover = resizeimage.resize_cover(image, [200, 100])
 					cover.save('/home/www/plots/' + str(size) + '_' +filename, image.format)
