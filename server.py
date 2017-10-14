@@ -22,8 +22,8 @@ def incoming():
 	Hook for the twist
 	"""
 	data = request.get_json(silent = True)
-	print(request, data)
-	if not 'event_type'	 in data:
+	print(request.__dict__)
+	if not data:
 		return jsonify('fucking shit')
 	event_type = data['event_type']
 	if event_type == 'ping':
