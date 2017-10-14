@@ -4,6 +4,7 @@ from flask import jsonify
 import requests
 import json
 import pandas as pd
+from dateparser import parse
 
 app = Flask(__name__)
 
@@ -14,6 +15,16 @@ companies_data = {
 		'users': 1888
 	}
 }
+
+@app.route('/twist_incoming', methods = ['POST'])
+def incoming():
+    event_type = request.form['event_type']
+    if event_type == 'ping':
+    	return jsonify(request.form['content'])
+
+	command = request.form['command']
+	command_argument = request.form['command_argument']
+	return jsonify([command, command_argument])
 
 
 
@@ -52,6 +63,38 @@ def query():
 	return jsonify(answer)
 
 
+def parse_dates(query):
 
+    words = query.split()
+
+    words_parsed = [0] * len(words)
+    for i in range(len(words)):
+        for j in range(i, len(words)):
+            candidate = ' '.join(words[i:j+1])
+            if parse(candidate):
+                words_parsed[i:j+1] = [1]*(j+1-i)
+
+    for i in range(len(words)):
+        if words[i] in ['and', 'to']:
+            words_parsed[i] = 0
+                
+    parsed_dates = []
+    current_date = ''
+    for i in range(len(words)+1):
+        if i == len(words) or words_parsed[i] == 0:
+            if current_date:
+                parsed_dates.append(parse(current_date).date())
+            current_date = ''
+        else:
+            current_date = current_date + (' ' if current_date else '')  + words[i]
+
+    parsed_dates = sorted(parsed_dates)
+    dates_to_return = []
+    if len(parsed_dates) > 0:
+        dates_to_return.append(parsed_dates[0])
+    if len(parsed_dates) > 1:
+        dates_to_return.append(parsed_dates[len(parsed_dates) - 1])
+    
+    return parsed_dates
 
 app.run()
