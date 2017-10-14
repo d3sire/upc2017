@@ -132,6 +132,8 @@ def query_plot(text, user_name, workspace_id):
 					'file_name': filename,
 					'url': 'https://plentsov.com/static/' + filename,
 					'image': 'https://plentsov.com/static/' + filename,
+					'image_height': 480,
+					'image_width': 640,
 					'attachment_id': np.random.randint(10000),
 					'upload_state': 'uploaded'
 				}
