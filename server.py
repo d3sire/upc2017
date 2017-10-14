@@ -128,7 +128,7 @@ def query_plot(text, user_name, workspace_id):
 		filename = 'plot.png'
 		plt.savefig('/home/www/plots/' + filename)
 
-		for size in [192, 512, 1024]:
+		for size in [192]:
 			with open('/home/www/plots/' + filename, 'r+b') as f:
 				with Image.open(f) as image:
 					cover = resizeimage.resize_cover(image, [size, size])
@@ -139,8 +139,8 @@ def query_plot(text, user_name, workspace_id):
 			'attachments': [
 				{
 					'thumbnails': {
-						"1024x1024": 'https://plentsov.com/static/1024_' + filename,
-						"512x512": 'https://plentsov.com/static/512_' + filename,
+						#"1024x1024": 'https://plentsov.com/static/1024_' + filename,
+						#"512x512": 'https://plentsov.com/static/512_' + filename,
 						"192x192": 'https://plentsov.com/static/192_' + filename
 					},
 					'file_type': 'image/png',
