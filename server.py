@@ -26,8 +26,8 @@ def incoming():
 	Hook for the twist
 	"""
 	data = request.form
-	print(request.__dict__)
-	print(request.form)
+	#print(request.form)
+	print(data['user_name'], data['verify_token'])
 
 	if not data:
 		return jsonify('fucking shit')
@@ -42,7 +42,7 @@ def incoming():
 	if command_argument.split()[0] == 'setup':
 		return setup(command_argument.split()[1:])
 
-	if command_argument.split()[1] == 'plot':
+	if len(command_argument.split()) > 1 and command_argument.split()[1] == 'plot':
 		return query_plot(' '.join(command_argument.split()[1:]))
 
 	return query(command_argument)
