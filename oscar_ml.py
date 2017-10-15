@@ -3,7 +3,7 @@ import pandas as pd
 from catboost import CatBoostClassifier
 from datetime import datetime
 
-def get_ml(X, y):
+def get_ml(X, y, X_cols):
 	"""
 	Provides with machine learning magic
 	"""
@@ -13,8 +13,8 @@ def get_ml(X, y):
 
 	response += 'Categorical features recognized:\n'
 	cat_features = []
-	for f in list(X.columns):
-		if not X[f].dtype in [np.dtype('int'), np.dtype('float64')]:
+	for f in X.shape[1]:
+		if not X[:,f].dtype in [np.dtype('int'), np.dtype('float64')]:
 			cat_features.append(f)
 			response += ('* ' + f + '\n')
 	response += '\n'
@@ -22,8 +22,8 @@ def get_ml(X, y):
 	cat_features = [list(X.columns).index(f) for f in cat_features]
 
 	mdl = CatBoostClassifier()
-	mdl.fit(X, y, cat_features=cat_features)
-	response += 'Accuracy of the model: {}.\n\n'.format(mdl.score(X, y))
+	mdl.fit(np.array(X), y, cat_features=cat_features)
+	response += 'Accuracy of the model: {}.\n\n'.format(mdl.score(np.array(X), y))
 
 	response += 'Most important features:\n'
 	n_features = 3

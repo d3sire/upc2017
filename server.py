@@ -235,7 +235,7 @@ def query(text, user_name, workspace_id):
 		y = data['sentiment'].values
 		y = (y == 'bad') * 1
 		data['date'] = data['date'].astype(str)
-		X = np.array(data[['cost', 'lat', 'lon', 'date', 'user_id']].copy())
+		X = data[['cost', 'lat', 'lon', 'date', 'user_id']].copy()
 		data = oscar_ml.get_ml(X, y)
 
 	else:
