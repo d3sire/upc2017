@@ -8,7 +8,7 @@ from dateparser import parse
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
-from datetime import datetime
+from datetime import datetime, date
 import numpy as np
 import os
 
@@ -21,14 +21,18 @@ app = Flask(__name__)
 
 companies_dbs = {}
 
+PATH_TO_SCRIPT = '/Users/plentsov/google_drive/upc2017/'
+#PATH_TO_SCRIPT = '/home/www/'
 
 # temporary client databases :)
 companies_data = {
 	28554: {
-		'users': 1888
+		'users': pd.read_csv(PATH_TO_SCRIPT + 'data/0_users.csv', parse_dates = ['registration_date']),
+		'orders': pd.read_csv(PATH_TO_SCRIPT + 'data/0_orders.csv', parse_dates = ['date'])
 	},
 	28565: {
-		'users': 2135
+		'users': pd.read_csv(PATH_TO_SCRIPT + 'data/0_users.csv', parse_dates = ['registration_date']),
+		'orders': pd.read_csv(PATH_TO_SCRIPT + 'data/0_orders.csv', parse_dates = ['date'])
 	}
 }
 
@@ -59,12 +63,11 @@ def incoming():
 **""".format(command_argument)
 
 	is_plot = 0
+	if 'plot' in text or 'dynamic' in text:
+		is_plot = 1
 
 	if command_argument.split()[0] == 'setup':
 		answer = setup(workspace_id, command_argument.split()[1:])
-	elif len(command_argument.split()) > 1 and command_argument.split()[0] == 'plot':
-		answer = query_plot(' '.join(command_argument.split()[1:]), data['user_name'], workspace_id)
-		is_plot = 1
 	else:
 		answer = query(command_argument, data['user_name'], workspace_id)
 
@@ -110,33 +113,131 @@ def query(text, user_name, workspace_id):
 	"""
 	Queries client's database
 	"""
-	if 'user' in text:
-		answer = 'There are ' + str(companies_data[workspace_id]['users']) + ' users.'
-	else:
-		answer = 'No entiendo, ' + str(user_name)
+	dates_in_query = parse_dates(text)
+	to_plot = 0
+	start_date = None
+	end_date = None
 
-	return {'content': answer}
+	if len(dates_in_query) > 0:
+		start_date = dates_in_query[0]
+		end_date = datetime.now().date() if len(dates_in_query) == 1 else dates_in_query[1]
 
+	if 'plot' in text or 'dynamic' in text:
+		to_plot = 1
 
-def query_plot(text, user_name, workspace_id):
-	"""
-	Returns a plot from query
-	"""
-	
-	if 'user' in text:
-		data = companies_data[workspace_id]['users']
-		plt.plot(data)
+	question_target = 'not_understood'
+	if 'user' in text and to_plot == 0: 
+		question_target = 'n_users_static' 
+	elif 'user' in text and to_plot == 1:
+		question_target = 'n_users_dynamic'
+	elif 'order' in text and to_plot == 0:
+		question_target = 'n_orders_static'
+	elif 'order' in text and to_plot == 1:
+		question_target = 'n_orders_dynamic'
+
+	# aggregating data
+	data = None
+
+	if question_target in 'n_users_static':
+		data = companies_data[workspace_id]['users'].copy()
+		if start_date:
+			data = data.loc[data.registration_date >= start_date].copy()
+			data = data.loc[data.registration_date <= end_date].copy()
+			data = 'Total number of users between {} and {} is {}'.format(start_date, end_date, len(data))
+		else:
+			data = 'Total number of users is {}'.format(len(data))
+
+	elif question_target in 'n_orders_static':
+		data = companies_data[workspace_id]['orders'].copy()
+		if start_date:
+			data = data.loc[data.date >= start_date].copy()
+			data = data.loc[data.date <= end_date].copy()
+			data = 'Total number of orders between {} and {} is {}'.format(start_date, end_date, len(data))
+		else:
+			data = 'Total number of orders is {}'.format(len(data))
+
+	elif question_target in 'n_users_dynamic':
+		data = companies_data[workspace_id]['users'].copy()
+		if start_date:
+			data = data.loc[data.registration_date >= start_date].copy()
+			data = data.loc[data.registration_date <= end_date].copy()
+		else:
+			start_date = data.registration_date.min()
+			end_date = data.registration_date.max()
+
+		content = 'Dynamics of number of users between {} and {}:**\n\n'.format(start_date, end_date)
+		
+		fig, ax = plt.subplots()
+
+		plot_gr = plot_granularity(start_date, end_date)
+		if plot_gr == 'day':
+			data.groupby('registration_date').size().plot(ax = ax)
+		elif plot_gr == 'week':
+			data['registration_week'] = data['registration_date'].dt.strftime('%Y-%U')
+			data.groupby('registration_week').size().plot(kind = 'bar', ax = ax)
+		elif plot_gr == 'month':
+			data['registration_month'] = data['registration_date'].dt.strftime('%Y-%m')
+			data.groupby('registration_month').size().plot(ax = ax)
+
 		filename = 'plot_' + str(datetime.now()) + '.png'
-		plt.savefig('/home/www/plots/' + filename)
+		plt.title('Number of registrations')
+		fig.savefig(PATH_TO_SCRIPT + 'plots/' + filename)
 
-		answer = {'content': 'Here is your plot:**\n\nhttps://plentsov.com/static/' + quote(filename)}
+		data = {'content': content + 'https://plentsov.com/static/' + quote(filename)}
+
+	elif question_target in 'n_orders_dynamic':
+		data = companies_data[workspace_id]['orders'].copy()
+		if start_date:
+			data = data.loc[data.date >= start_date].copy()
+			data = data.loc[data.date <= end_date].copy()
+		else:
+			start_date = data.date.min()
+			end_date = data.date.max()
+
+		content = 'Dynamics of number of orders between {} and {}:**\n\n'.format(start_date, end_date)
+		
+		fig, ax = plt.subplots()
+
+		plot_gr = plot_granularity(start_date, end_date)
+		if plot_gr == 'day':
+			data.groupby('date').size().plot(ax = ax)
+		elif plot_gr == 'week':
+			data['week'] = data['date'].dt.strftime('%Y-%U')
+			data.groupby('week').size().plot(kind = 'bar', ax = ax)
+		elif plot_gr == 'month':
+			data['month'] = data['date'].dt.strftime('%Y-%m', ax = ax)
+			data.groupby('month').size().plot()
+
+		filename = 'plot_' + str(datetime.now()) + '.png'
+		plt.title('Number of orders')
+		fig.savefig(PATH_TO_SCRIPT + 'plots/' + filename)
+
+		data = {'content': content + 'https://plentsov.com/static/' + quote(filename)}
+
 	else:
-		answer = {'content': 'No entiendo, ' + str(user_name)}
+		data = 'No entiendo, ' + str(user_name)
 
-	return answer
+	return {'content': data}
+
+
+def plot_granularity(start_date, end_date):
+	"""
+	Returns type of time periods to use for plotting
+	"""
+	datediff = end_date - start_date
+	datediff = datediff.days
+
+	if datediff <= 30:
+		return 'day'
+	if datediff <= 90:
+		return 'week'
+	return 'month'
 
 
 def parse_dates(query):
+    """
+    Extract max 2 dates from query text, including like 'september 1st', 'yesterday'
+    """
 
     words = query.split()
 
@@ -170,4 +271,5 @@ def parse_dates(query):
     
     return parsed_dates
 
-app.run()
+if __name__ == '__main__':
+	app.run()
