@@ -234,6 +234,7 @@ def query(text, user_name, workspace_id):
 		data = orders.loc[orders.sentiment.isin(['good', 'bad']), :].copy()
 		y = orders['sentiment'].values
 		y = (y == 'bad') * 1
+		orders['date'] = orders['date'].astype(str)
 		X = orders[['cost', 'lat', 'lon', 'date', 'user_id']].copy()
 		data = oscar_ml.get_ml(X, y)
 
