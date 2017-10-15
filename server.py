@@ -164,8 +164,8 @@ def query(text, user_name, workspace_id):
 			data = data.loc[data.registration_date >= start_date].copy()
 			data = data.loc[data.registration_date <= end_date].copy()
 		else:
-			start_date = data.registration_date.min()
-			end_date = data.registration_date.max()
+			start_date = data.registration_date.min().date()
+			end_date = data.registration_date.max().date()
 
 		content = 'Dynamics of number of users between {} and {}:**\n\n'.format(start_date, end_date)
 		
@@ -185,7 +185,7 @@ def query(text, user_name, workspace_id):
 		plt.title('Number of registrations')
 		fig.savefig(PATH_TO_SCRIPT + 'plots/' + filename)
 
-		data = content + 'https://plentsov.com/static/' + quote(filename)
+		data = content + '[source](https://plentsov.com/static/' + quote(filename) + ')'
 
 	elif question_target in 'n_orders_dynamic':
 		data = companies_data[workspace_id]['orders'].copy()
@@ -193,8 +193,8 @@ def query(text, user_name, workspace_id):
 			data = data.loc[data.date >= start_date].copy()
 			data = data.loc[data.date <= end_date].copy()
 		else:
-			start_date = data.date.min()
-			end_date = data.date.max()
+			start_date = data.date.min().date()
+			end_date = data.date.max().date()
 
 		content = 'Dynamics of number of orders between {} and {}:**\n\n'.format(start_date, end_date)
 		
@@ -214,7 +214,7 @@ def query(text, user_name, workspace_id):
 		plt.title('Number of orders')
 		fig.savefig(PATH_TO_SCRIPT + 'plots/' + filename)
 
-		data = content + 'https://plentsov.com/static/' + quote(filename)
+		data = content + '[source](https://plentsov.com/static/' + quote(filename) + ')'
 
 	else:
 		data = 'No entiendo, ' + str(user_name)
