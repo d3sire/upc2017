@@ -64,7 +64,8 @@ def incoming():
 
 	command = data['command'] # should be oscar
 	command_argument = data['command_argument']
-	workspace_id = int(data['workspace_id'])
+	#workspace_id = int(data['workspace_id'])
+	workspace_id = 28554
 
 	answer_start = """/oscar {}
 
