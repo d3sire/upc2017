@@ -23,7 +23,7 @@ def get_ml(X, y):
 
 	mdl = CatBoostClassifier()
 	mdl.fit(np.array(X), y, cat_features=cat_features)
-	response += 'Accuracy of the model: {}.\n\n'.format(mdl.score(np.array(X), y))
+	response += 'Accuracy of the model: {}.\n\n'.format(round((mdl.predict(np.array(X), y) == y).mean(), 2))
 
 	response += 'Most important features:\n'
 	n_features = 3
