@@ -18,6 +18,8 @@ from urllib.parse import quote
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+import oscar_ml
+
 app = Flask(__name__)
 
 companies_dbs = {}
@@ -140,6 +142,8 @@ def query(text, user_name, workspace_id):
 		question_target = 'n_orders_static'
 	elif 'order' in text and to_plot == 1:
 		question_target = 'n_orders_dynamic'
+	elif 'reasons' in text and 'bad' in text and 'comment' in text:
+		question_target = 'predict_sentiment'
 	elif 'comments' in text:
 		question_target = 'comments'
 
@@ -224,6 +228,13 @@ def query(text, user_name, workspace_id):
 
 	elif question_target in 'comments':
 		data = get_sentiment_stats(workspace_id, start_date, end_date)
+
+	elif question_target in 'predict_sentiment':
+		data = orders.loc[orders.sentiment.isin(['good', 'bad']), :].copy()
+		y = orders['sentiment'].values
+		y = (y == 'bad') * 1
+		X = orders[['cost', 'lat', 'lon', 'date', 'user_id']].copy()
+		data = oscar_ml.get_ml(X, y)
 
 	else:
 		data = 'No entiendo, ' + str(user_name)
