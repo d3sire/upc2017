@@ -185,7 +185,7 @@ def query(text, user_name, workspace_id):
 		plt.title('Number of registrations')
 		fig.savefig(PATH_TO_SCRIPT + 'plots/' + filename)
 
-		data = {'content': content + 'https://plentsov.com/static/' + quote(filename)}
+		data = content + 'https://plentsov.com/static/' + quote(filename)
 
 	elif question_target in 'n_orders_dynamic':
 		data = companies_data[workspace_id]['orders'].copy()
@@ -214,7 +214,7 @@ def query(text, user_name, workspace_id):
 		plt.title('Number of orders')
 		fig.savefig(PATH_TO_SCRIPT + 'plots/' + filename)
 
-		data = {'content': content + 'https://plentsov.com/static/' + quote(filename)}
+		data = content + 'https://plentsov.com/static/' + quote(filename)
 
 	else:
 		data = 'No entiendo, ' + str(user_name)
