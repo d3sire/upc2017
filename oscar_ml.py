@@ -21,6 +21,7 @@ def get_ml(X, y):
 
 	cat_features = [list(X.columns).index(f) for f in cat_features]
 
+	mdl = CatBoostClassifier()
 	mdl.fit(X, y, cat_features=cat_features)
 	response += 'Accuracy of the model: {}.\n\n'.format(mdl.score(X, y))
 
