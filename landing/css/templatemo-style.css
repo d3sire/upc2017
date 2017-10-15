@@ -9,7 +9,7 @@ http://www.templatemo.com/tm-446-boxer
 body
     {
         background: #fff;
-        font-family: 'Open Sans', sans-serif;
+        font-family: Helvetica, 'Open Sans', sans-serif;
         font-weight: 300;
         position: relative;
         width: 100%;
@@ -85,6 +85,14 @@ img
     position: fixed;
 }
 
+.our-h1 {
+    font-family: Helvetica, serif;
+}
+
+.main-description {
+    font-size: 1.2em;
+}
+
 @media (max-width: 1100px) {
     .logo {
         left: 5%;
@@ -110,6 +118,11 @@ img
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+.stack-image {
+    max-width: 150px;
+    max-height: 150px;
 }
 
 /* start preloader */
@@ -257,21 +270,21 @@ img
 /* end divider */
 
 /* start feature */
-#feature
+.feature1
     {
         background: #f8f8f8;
-        padding-top: 80px;
-        padding-bottom: 80px;
+        padding-top: 60px;
+        padding-bottom: 60px;
     }
-#feature p
+.feature1 p
     {
         padding-top: 10px;
     }
-#feature span
+.feature1 span
     {
         float: left;
     }
-#feature .fa
+.feature1 .fa
     {
         background: #4385EC;
         border-radius: 50%;
@@ -286,20 +299,20 @@ img
 /* end feature */
 
 /* start feature1 */
-#feature1
+.feature2
     {
         padding-top: 60px;
         padding-bottom: 60px;
     }
-#feature1 p
+.feature2 p
     {
         padding-top: 10px;
     }
-#feature1 span
+.feature2 span
     {
         float: left;
     }
-#feature1 .fa
+.feature2 .fa
     {
         background: #4385EC;
         border-radius: 50%;
@@ -312,6 +325,34 @@ img
         margin-right: 20px;
     }
 /* end feature1 */
+
+.stack {
+    height: 50px;
+    background-color: #fff;
+}
+
+.stack-aws {
+    padding-top: 30px;
+    max-height: 250px;
+    max-width: 300px;
+}
+
+.catboost {
+    max-width: 500px;
+}
+
+.pricing {
+    align-items: center;
+    justify-content: center;
+}
+
+.stack-button {
+    margin-top: 70px;
+}
+
+.install-button {
+    line-height: 0.8em;
+}
 
 /* start pricing */
 #pricing
@@ -327,7 +368,7 @@ img
     }
 #pricing .pricing
     {
-        background: #fff;
+        background: #f8f8f8;
     }
 #pricing .active
     {
