@@ -13,8 +13,8 @@ def get_ml(X, y):
 
 	response += 'Categorical features recognized:\n'
 	cat_features = []
-	for f in X.shape[1]:
-		if not X[:,f].dtype in [np.dtype('int'), np.dtype('float64')]:
+	for f in list(X.columns):
+		if not X[f].dtype in [np.dtype('int'), np.dtype('float64')]:
 			cat_features.append(f)
 			response += ('* ' + f + '\n')
 	response += '\n'
