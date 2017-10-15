@@ -3,7 +3,7 @@ import pandas as pd
 from catboost import CatBoostClassifier
 from datetime import datetime
 
-def get_ml(X, y, X_cols):
+def get_ml(X, y):
 	"""
 	Provides with machine learning magic
 	"""
