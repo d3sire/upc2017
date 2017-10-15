@@ -232,10 +232,10 @@ def query(text, user_name, workspace_id):
 	elif question_target in 'predict_sentiment':
 		orders = companies_data[workspace_id]['orders'].copy()
 		data = orders.loc[orders.sentiment.isin(['good', 'bad']), :].copy()
-		y = orders['sentiment'].values
+		y = data['sentiment'].values
 		y = (y == 'bad') * 1
-		orders['date'] = orders['date'].astype(str)
-		X = orders[['cost', 'lat', 'lon', 'date', 'user_id']].copy()
+		data['date'] = data['date'].astype(str)
+		X = data[['cost', 'lat', 'lon', 'date', 'user_id']].copy()
 		data = oscar_ml.get_ml(X, y)
 
 	else:
