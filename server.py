@@ -65,7 +65,7 @@ def incoming():
 **""".format(command_argument)
 
 	is_plot = 0
-	if 'plot' in text or 'dynamic' in text:
+	if 'plot' in command_argument or 'dynamic' in command_argument:
 		is_plot = 1
 
 	if command_argument.split()[0] == 'setup':
