@@ -68,16 +68,16 @@ def incoming():
 
 **""".format(command_argument)
 
-	is_plot = 0
-	if 'plot' in command_argument or 'dynamic' in command_argument:
-		is_plot = 1
+	no_bold = 0
+	if 'plot' in command_argument or 'dynamic' in command_argument or 'comment' in command_argument:
+		no_bold = 1
 
 	if command_argument.split()[0] == 'setup':
 		answer = setup(workspace_id, command_argument.split()[1:])
 	else:
 		answer = query(command_argument, data['user_name'], workspace_id)
 
-	answer['content'] = answer_start + answer['content'] + ('**' if is_plot == 0 else '')
+	answer['content'] = answer_start + answer['content'] + ('**' if no_bold == 0 else '')
 
 	logging.warning(jsonify(answer).get_data(as_text=True))
 
@@ -247,10 +247,11 @@ def get_sentiment_stats(workspace_id, start_date, end_date):
 	negative_ex = list(np.random.choice(data[data.sentiment == 'bad']['comment'], size = 3))
 
 	response = 'Number of comments from {} to {} is {}.\n'.format(start_date, end_date, n_comments)
-	response += 'Share of positive comments: {}.\n\n'.format(share_positive)
+	response += 'Share of positive comments: {}.**\n\n'.format(share_positive)
 	response += '_Positive comments examples_:\n'
 	for ex in positive_ex:
 		response += ('* ' + ex + '\n')
+	response += '\n'
 	response += '_Negative comments examples_:\n'
 	for ex in negative_ex:
 		response += ('* ' + ex + '\n')
