@@ -242,7 +242,7 @@ def get_sentiment_stats(workspace_id, start_date, end_date):
 
 	n_comments = len(data)
 	share_positive = round((data.sentiment == 'good').mean(),2)
-	data['comment'] = data['comment'].apply(lambda s: s[:50])
+	data['comment'] = data['comment'].apply(lambda s: ' '.join(s.split()[:10]) + ('...' if len(s.split()) > 10 else ''))
 	positive_ex = list(np.random.choice(data[data.sentiment == 'good']['comment'], size = 3))
 	negative_ex = list(np.random.choice(data[data.sentiment == 'bad']['comment'], size = 3))
 
