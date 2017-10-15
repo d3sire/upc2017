@@ -207,8 +207,8 @@ def query(text, user_name, workspace_id):
 			data['week'] = data['date'].dt.strftime('%Y-%U')
 			data.groupby('week').size().plot(kind = 'bar', ax = ax)
 		elif plot_gr == 'month':
-			data['month'] = data['date'].dt.strftime('%Y-%m', ax = ax)
-			data.groupby('month').size().plot()
+			data['month'] = data['date'].dt.strftime('%Y-%m')
+			data.groupby('month').size().plot(ax = ax)
 
 		filename = 'plot_' + str(datetime.now()) + '.png'
 		plt.title('Number of orders')
