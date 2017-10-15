@@ -230,6 +230,7 @@ def query(text, user_name, workspace_id):
 		data = get_sentiment_stats(workspace_id, start_date, end_date)
 
 	elif question_target in 'predict_sentiment':
+		orders = companies_data[workspace_id]['orders'].copy()
 		data = orders.loc[orders.sentiment.isin(['good', 'bad']), :].copy()
 		y = orders['sentiment'].values
 		y = (y == 'bad') * 1
