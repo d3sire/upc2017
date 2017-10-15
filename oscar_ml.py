@@ -27,8 +27,8 @@ def get_ml(X, y):
 
 	response += 'Most important features:\n'
 	n_features = 3
-	imp_f = np.array(X.columns)[np.argsort(mdl.feature_importance_)[-n_features:]][::-1]
-	imp_fi = np.round(np.sort(mdl.feature_importance_)[-n_features:],2)[::-1]
+	imp_f = np.array(X.columns)[np.argsort(mdl.feature_importances_)[-n_features:]][::-1]
+	imp_fi = np.round(np.sort(mdl.feature_importances_)[-n_features:],2)[::-1]
 	for i in range(n_features):
 		response += '* {}: {}\n'.format(imp_f[i], imp_fi[i])
 
