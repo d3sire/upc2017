@@ -4,3 +4,4 @@ pandas
 dateparser
 matplotlib
 numpy
+catboost
