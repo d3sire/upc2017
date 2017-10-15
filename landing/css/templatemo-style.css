@@ -337,6 +337,10 @@ img
     max-width: 300px;
 }
 
+.catboost {
+    max-width: 500px;
+}
+
 .pricing {
     align-items: center;
     justify-content: center;
