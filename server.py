@@ -35,6 +35,10 @@ companies_data = {
 	28565: {
 		'users': pd.read_csv(PATH_TO_SCRIPT + 'data/0_users.csv', parse_dates = ['registration_date']),
 		'orders': pd.read_csv(PATH_TO_SCRIPT + 'data/0_orders.csv', parse_dates = ['date'])
+	},
+	28656: {
+		'users': pd.read_csv(PATH_TO_SCRIPT + 'data/0_users.csv', parse_dates = ['registration_date']),
+		'orders': pd.read_csv(PATH_TO_SCRIPT + 'data/0_orders.csv', parse_dates = ['date'])
 	}
 }
 
@@ -136,6 +140,8 @@ def query(text, user_name, workspace_id):
 		question_target = 'n_orders_static'
 	elif 'order' in text and to_plot == 1:
 		question_target = 'n_orders_dynamic'
+	elif 'comments' in text:
+		question_target = 'comments'
 
 	# aggregating data
 	data = None
@@ -221,6 +227,43 @@ def query(text, user_name, workspace_id):
 
 	return {'content': data}
 
+
+def get_sentiment_stats(workspace_id, start_date, end_date):
+	data = companies_data[workspace_id]['orders'].copy()
+	data = data.loc[~pd.isnull(data['comment']),:]
+	if not start_date:
+		start_date = data.date.min().date()
+		end_date = data.date.max().date()
+	data = data[data.date >= start_date].copy()
+	data = data[data.date <= end_date].copy()
+
+	n_comments = len(data)
+	share_positive = round((data.sentiment == 'good').mean(),2)
+	positive_ex = list(np.random.choice(data[data.sentiment == 'good']['comment'], size = 3))
+	negative_ex = list(np.random.choice(data[data.sentiment == 'bad']['comment'], size = 3))
+
+	response = 'Number of comments from {} to {} is {}.\n'.format(start_date, end_date, n_comments)
+	response += 'Share of positive comments: {}.\n\n'.format(share_positive)
+	response += '_Positive comments examples_:\n'
+	for ex in positive_ex:
+		response += ('* ' + ex + '\n')
+	response += '_Negative comments examples_:\n'
+	for ex in negative_ex:
+		response += ('* ' + ex + '\n')
+
+	return response
+
+
+
+def get_sentiment(text, lang = 'en'):
+	"""
+	Grabs sentiment (1/0 - good/bad) from go microservice
+	Langs: en, es
+	"""
+	url = 'https://plentsov.com/sentiment/analyze?query={}&lang={}'.format(text, lang)
+	sentiment = int(requests.get(url).json()['result'])
+	sentiment = 'good' if sentiment else 'bad'
+	return sentiment
 
 def plot_granularity(start_date, end_date):
 	"""
