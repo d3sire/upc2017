@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, date
 import numpy as np
 import os
+import argparse
 
 from urllib.parse import quote
 
@@ -21,8 +22,9 @@ app = Flask(__name__)
 
 companies_dbs = {}
 
-PATH_TO_SCRIPT = '/Users/plentsov/google_drive/upc2017/'
-#PATH_TO_SCRIPT = '/home/www/'
+PATH_TO_SCRIPT = '/home/www/'
+if 'IS_DEV' in os.environ:
+	PATH_TO_SCRIPT = '/Users/plentsov/google_drive/upc2017/'
 
 # temporary client databases :)
 companies_data = {
